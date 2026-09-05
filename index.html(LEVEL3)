@@ -1,0 +1,2435 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>PizzaHub - Pizza Delivery</title>
+
+    <style>
+
+        /* ==============================
+           RESET
+        ============================== */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            color: #222;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        /* ==============================
+           NAVBAR
+        ============================== */
+
+        nav {
+            background: #111827;
+            color: white;
+            padding: 18px 7%;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 25px;
+            font-weight: bold;
+        }
+
+        .logo span {
+            color: #ef4444;
+        }
+
+        .nav-right {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .nav-btn {
+            border: none;
+            background: #ef4444;
+            color: white;
+            padding: 10px 16px;
+            border-radius: 8px;
+        }
+
+        /* ==============================
+           HERO
+        ============================== */
+
+        .hero {
+            min-height: 350px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            text-align: center;
+
+            background:
+                linear-gradient(
+                    rgba(0,0,0,.65),
+                    rgba(0,0,0,.65)
+                ),
+                url("https://images.unsplash.com/photo-1513104890138-7c749659a591")
+                center/cover;
+            
+            color: white;
+            padding: 50px 20px;
+        }
+
+        .hero h1 {
+            font-size: 50px;
+            margin-bottom: 15px;
+        }
+
+        .hero p {
+            font-size: 18px;
+            margin-bottom: 25px;
+        }
+
+        .primary-btn {
+            background: #ef4444;
+            color: white;
+
+            border: none;
+            padding: 14px 25px;
+
+            border-radius: 8px;
+
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .primary-btn:hover {
+            background: #dc2626;
+        }
+
+        /* ==============================
+           CONTAINER
+        ============================== */
+
+        .container {
+            width: 90%;
+            max-width: 1100px;
+
+            margin: 40px auto;
+        }
+
+        .section-title {
+            margin-bottom: 25px;
+            font-size: 30px;
+        }
+
+        /* ==============================
+           PIZZA CARDS
+        ============================== */
+
+        .pizza-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(auto-fit, minmax(220px, 1fr));
+
+            gap: 20px;
+        }
+
+        .pizza-card {
+            background: white;
+
+            border-radius: 15px;
+
+            overflow: hidden;
+
+            box-shadow:
+                0 5px 20px rgba(0,0,0,.1);
+
+            transition: .2s;
+        }
+
+        .pizza-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .pizza-image {
+            height: 160px;
+
+            background-size: cover;
+            background-position: center;
+        }
+
+        .pizza-info {
+            padding: 18px;
+        }
+
+        .pizza-info h3 {
+            margin-bottom: 8px;
+        }
+
+        .price {
+            color: #ef4444;
+            font-weight: bold;
+            font-size: 18px;
+
+            margin: 10px 0;
+        }
+
+        /* ==============================
+           BUILDER
+        ============================== */
+
+        .builder {
+            background: white;
+
+            padding: 30px;
+
+            border-radius: 15px;
+
+            box-shadow:
+                0 5px 20px rgba(0,0,0,.1);
+        }
+
+        .step {
+            margin-bottom: 30px;
+        }
+
+        .step h3 {
+            margin-bottom: 15px;
+        }
+
+        .options {
+            display: grid;
+
+            grid-template-columns:
+                repeat(auto-fit, minmax(150px, 1fr));
+
+            gap: 12px;
+        }
+
+        .option {
+            padding: 15px;
+
+            border: 2px solid #ddd;
+
+            border-radius: 10px;
+
+            background: white;
+
+            text-align: center;
+
+            transition: .2s;
+        }
+
+        .option:hover {
+            border-color: #ef4444;
+        }
+
+        .option.selected {
+            border-color: #ef4444;
+
+            background: #fff1f2;
+        }
+
+        .vegetable-option {
+            display: flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            padding: 10px;
+        }
+
+        /* ==============================
+           SUMMARY
+        ============================== */
+
+        .summary {
+            background: #111827;
+
+            color: white;
+
+            padding: 25px;
+
+            border-radius: 15px;
+
+            margin-top: 30px;
+        }
+
+        .summary-row {
+            display: flex;
+
+            justify-content: space-between;
+
+            padding: 8px 0;
+
+            border-bottom: 1px solid #374151;
+        }
+
+        .total {
+            font-size: 24px;
+
+            font-weight: bold;
+
+            margin-top: 15px;
+
+            color: #f87171;
+        }
+
+        /* ==============================
+           AUTH MODAL
+        ============================== */
+
+        .modal {
+            position: fixed;
+
+            inset: 0;
+
+            background: rgba(0,0,0,.7);
+
+            display: none;
+
+            align-items: center;
+
+            justify-content: center;
+
+            z-index: 1000;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-box {
+            width: 90%;
+            max-width: 420px;
+
+            background: white;
+
+            padding: 30px;
+
+            border-radius: 15px;
+        }
+
+        .modal-box h2 {
+            margin-bottom: 20px;
+        }
+
+        .input {
+            width: 100%;
+
+            padding: 13px;
+
+            margin-bottom: 12px;
+
+            border: 1px solid #ccc;
+
+            border-radius: 8px;
+
+            font-size: 15px;
+        }
+
+        .close {
+            float: right;
+
+            border: none;
+
+            background: none;
+
+            font-size: 25px;
+        }
+
+        /* ==============================
+           ORDER TRACKING
+        ============================== */
+
+        .tracking {
+            background: white;
+
+            padding: 25px;
+
+            border-radius: 15px;
+
+            box-shadow:
+                0 5px 20px rgba(0,0,0,.1);
+        }
+
+        .status {
+            display: flex;
+
+            justify-content: space-between;
+
+            margin-top: 25px;
+        }
+
+        .status-step {
+            text-align: center;
+
+            flex: 1;
+
+            color: #aaa;
+        }
+
+        .status-step.active {
+            color: #22c55e;
+
+            font-weight: bold;
+        }
+
+        .circle {
+            width: 40px;
+            height: 40px;
+
+            margin: auto auto 8px;
+
+            border-radius: 50%;
+
+            background: #ddd;
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+        }
+
+        .status-step.active .circle {
+            background: #22c55e;
+            color: white;
+        }
+
+        /* ==============================
+           ADMIN
+        ============================== */
+
+        .admin-panel {
+            background: white;
+
+            padding: 25px;
+
+            border-radius: 15px;
+
+            margin-top: 30px;
+        }
+
+        .inventory {
+            display: grid;
+
+            grid-template-columns:
+                repeat(auto-fit, minmax(180px, 1fr));
+
+            gap: 15px;
+
+            margin-top: 20px;
+        }
+
+        .stock-card {
+            border: 1px solid #ddd;
+
+            padding: 15px;
+
+            border-radius: 10px;
+        }
+
+        .low-stock {
+            color: #dc2626;
+
+            font-weight: bold;
+        }
+
+        /* ==============================
+           NOTIFICATION
+        ============================== */
+
+        .notification {
+            position: fixed;
+
+            right: 20px;
+            bottom: 20px;
+
+            background: #111827;
+
+            color: white;
+
+            padding: 15px 20px;
+
+            border-radius: 10px;
+
+            display: none;
+
+            z-index: 2000;
+        }
+
+        /* ==============================
+           FOOTER
+        ============================== */
+
+        footer {
+            background: #111827;
+
+            color: white;
+
+            text-align: center;
+
+            padding: 30px;
+
+            margin-top: 50px;
+        }
+
+        /* ==============================
+           RESPONSIVE
+        ============================== */
+
+        @media(max-width:600px) {
+
+            .hero h1 {
+                font-size: 35px;
+            }
+
+            nav {
+                padding: 15px;
+            }
+
+            .nav-right {
+                gap: 5px;
+            }
+
+            .nav-btn {
+                padding: 8px;
+            }
+
+            .builder {
+                padding: 18px;
+            }
+
+            .status {
+                flex-direction: column;
+
+                gap: 15px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- ==============================
+     NAVBAR
+================================= -->
+
+<nav>
+
+    <div class="logo">
+        🍕 Pizza<span>Hub</span>
+    </div>
+
+    <div class="nav-right">
+
+        <button
+            class="nav-btn"
+            id="loginBtn">
+            Login
+        </button>
+
+        <button
+            class="nav-btn"
+            id="registerBtn">
+            Register
+        </button>
+
+        <button
+            class="nav-btn"
+            id="logoutBtn"
+            style="display:none;">
+            Logout
+        </button>
+
+    </div>
+
+</nav>
+
+
+<!-- ==============================
+     HERO
+================================= -->
+
+<section class="hero">
+
+    <div>
+
+        <h1>Build Your Perfect Pizza 🍕</h1>
+
+        <p>
+            Choose your base, sauce, cheese and vegetables.
+        </p>
+
+        <button
+            class="primary-btn"
+            id="startBtn">
+            Start Building
+        </button>
+
+    </div>
+
+</section>
+
+
+<!-- ==============================
+     PIZZA VARIETIES
+================================= -->
+
+<section class="container">
+
+    <h2 class="section-title">
+        Popular Pizza Varieties
+    </h2>
+
+    <div
+        class="pizza-grid"
+        id="pizzaGrid">
+    </div>
+
+</section>
+
+
+<!-- ==============================
+     PIZZA BUILDER
+================================= -->
+
+<section
+    class="container"
+    id="builderSection">
+
+    <h2 class="section-title">
+        Custom Pizza Builder
+    </h2>
+
+    <div class="builder">
+
+
+        <!-- STEP 1 -->
+
+        <div class="step">
+
+            <h3>
+                Step 1 — Choose Pizza Base
+            </h3>
+
+            <div
+                class="options"
+                id="baseOptions">
+
+            </div>
+
+        </div>
+
+
+        <!-- STEP 2 -->
+
+        <div class="step">
+
+            <h3>
+                Step 2 — Choose Sauce
+            </h3>
+
+            <div
+                class="options"
+                id="sauceOptions">
+
+            </div>
+
+        </div>
+
+
+        <!-- STEP 3 -->
+
+        <div class="step">
+
+            <h3>
+                Step 3 — Choose Cheese
+            </h3>
+
+            <div
+                class="options"
+                id="cheeseOptions">
+
+            </div>
+
+        </div>
+
+
+        <!-- STEP 4 -->
+
+        <div class="step">
+
+            <h3>
+                Step 4 — Choose Vegetables
+            </h3>
+
+            <div
+                class="options"
+                id="vegetableOptions">
+
+            </div>
+
+        </div>
+
+
+        <!-- SUMMARY -->
+
+        <div class="summary">
+
+            <h2>
+                Order Summary
+            </h2>
+
+            <div
+                id="summaryContent">
+            </div>
+
+            <div
+                class="total"
+                id="total">
+                Total: ₹0
+            </div>
+
+            <br>
+
+            <button
+                class="primary-btn"
+                id="orderBtn">
+
+                Proceed to Payment
+
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ==============================
+     ORDER TRACKING
+================================= -->
+
+<section
+    class="container"
+    id="trackingSection"
+    style="display:none;">
+
+    <h2 class="section-title">
+        Order Tracking
+    </h2>
+
+    <div class="tracking">
+
+        <h3 id="orderId">
+            Order ID: -
+        </h3>
+
+        <div class="status">
+
+            <div
+                class="status-step active"
+                id="step1">
+
+                <div class="circle">
+                    ✓
+                </div>
+
+                Order Placed
+
+            </div>
+
+
+            <div
+                class="status-step"
+                id="step2">
+
+                <div class="circle">
+                    2
+                </div>
+
+                Preparing
+
+            </div>
+
+
+            <div
+                class="status-step"
+                id="step3">
+
+                <div class="circle">
+                    3
+                </div>
+
+                Out for Delivery
+
+            </div>
+
+
+            <div
+                class="status-step"
+                id="step4">
+
+                <div class="circle">
+                    4
+                </div>
+
+                Delivered
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ==============================
+     ADMIN PANEL
+================================= -->
+
+<section
+    class="container"
+    id="adminSection"
+    style="display:none;">
+
+    <h2 class="section-title">
+        Admin Dashboard
+    </h2>
+
+    <div class="admin-panel">
+
+        <h3>
+            Inventory Management
+        </h3>
+
+        <div
+            class="inventory"
+            id="inventory">
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ==============================
+     AUTH MODAL
+================================= -->
+
+<div
+    class="modal"
+    id="authModal">
+
+    <div class="modal-box">
+
+        <button
+            class="close"
+            id="closeModal">
+            ×
+        </button>
+
+        <h2 id="authTitle">
+            Login
+        </h2>
+
+
+        <input
+            type="text"
+            id="nameInput"
+            class="input"
+            placeholder="Full Name"
+            style="display:none;">
+
+
+        <input
+            type="email"
+            id="emailInput"
+            class="input"
+            placeholder="Email">
+
+
+        <input
+            type="password"
+            id="passwordInput"
+            class="input"
+            placeholder="Password">
+
+
+        <button
+            class="primary-btn"
+            id="authSubmit">
+
+            Login
+
+        </button>
+
+        <br><br>
+
+        <button
+            id="forgotBtn"
+            style="
+                border:none;
+                background:none;
+                color:#ef4444;
+            ">
+
+            Forgot Password?
+
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- ==============================
+     PAYMENT MODAL
+================================= -->
+
+<div
+    class="modal"
+    id="paymentModal">
+
+    <div class="modal-box">
+
+        <h2>
+            Razorpay Test Checkout
+        </h2>
+
+        <p>
+            This is a simulated Razorpay test-mode checkout.
+        </p>
+
+        <br>
+
+        <h3 id="paymentAmount">
+            Amount: ₹0
+        </h3>
+
+        <br>
+
+        <button
+            class="primary-btn"
+            id="paymentSuccess">
+
+            ✓ Test Payment Success
+
+        </button>
+
+        <br><br>
+
+        <button
+            id="paymentCancel"
+            style="
+                padding:10px;
+                width:100%;
+            ">
+
+            Cancel
+
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- ==============================
+     NOTIFICATION
+================================= -->
+
+<div
+    class="notification"
+    id="notification">
+</div>
+
+
+<footer>
+
+    <p>
+        © 2026 PizzaHub
+    </p>
+
+    <p>
+        OIBSIP Web Development Project
+    </p>
+
+</footer>
+
+
+<script>
+
+    /* =================================================
+       DATA
+    ================================================= */
+
+    const bases = [
+        {
+            name: "Classic",
+            price: 100
+        },
+        {
+            name: "Thin Crust",
+            price: 120
+        },
+        {
+            name: "Cheese Burst",
+            price: 160
+        },
+        {
+            name: "Whole Wheat",
+            price: 130
+        },
+        {
+            name: "Italian Herb",
+            price: 150
+        }
+    ];
+
+
+    const sauces = [
+        {
+            name: "Tomato",
+            price: 30
+        },
+        {
+            name: "Spicy",
+            price: 40
+        },
+        {
+            name: "BBQ",
+            price: 50
+        },
+        {
+            name: "Pesto",
+            price: 60
+        },
+        {
+            name: "Garlic",
+            price: 45
+        }
+    ];
+
+
+    const cheeses = [
+        {
+            name: "Mozzarella",
+            price: 60
+        },
+        {
+            name: "Cheddar",
+            price: 70
+        },
+        {
+            name: "Parmesan",
+            price: 80
+        }
+    ];
+
+
+    const vegetables = [
+        {
+            name: "Onion",
+            price: 15
+        },
+        {
+            name: "Capsicum",
+            price: 20
+        },
+        {
+            name: "Mushroom",
+            price: 25
+        },
+        {
+            name: "Corn",
+            price: 20
+        },
+        {
+            name: "Olives",
+            price: 30
+        },
+        {
+            name: "Tomato",
+            price: 15
+        }
+    ];
+
+
+    const pizzaVarieties = [
+
+        {
+            name: "Margherita",
+            price: 249,
+            image:
+            "https://images.unsplash.com/photo-1574071318508-1cdbab80d002"
+        },
+
+        {
+            name: "Pepperoni",
+            price: 299,
+            image:
+            "https://images.unsplash.com/photo-1628840042765-356cda07504e"
+        },
+
+        {
+            name: "Veggie",
+            price: 279,
+            image:
+            "https://images.unsplash.com/photo-1579751626657-72bc17010498"
+        },
+
+        {
+            name: "Cheese Burst",
+            price: 329,
+            image:
+            "https://images.unsplash.com/photo-1594007654729-407eedc4be65"
+        }
+
+    ];
+
+
+    /* =================================================
+       APPLICATION STATE
+    ================================================= */
+
+    let selectedBase = null;
+
+    let selectedSauce = null;
+
+    let selectedCheese = null;
+
+    let selectedVegetables = [];
+
+    let currentUser = null;
+
+    let authMode = "login";
+
+    let currentOrder = null;
+
+
+    /* =================================================
+       LOCAL STORAGE INITIALIZATION
+    ================================================= */
+
+    if (!localStorage.getItem("pizzaUsers")) {
+
+        localStorage.setItem(
+            "pizzaUsers",
+            JSON.stringify([])
+        );
+
+    }
+
+
+    if (!localStorage.getItem("pizzaOrders")) {
+
+        localStorage.setItem(
+            "pizzaOrders",
+            JSON.stringify([])
+        );
+
+    }
+
+
+    /* =================================================
+       NOTIFICATION
+    ================================================= */
+
+    function showNotification(message) {
+
+        const notification =
+            document.getElementById("notification");
+
+        notification.textContent = message;
+
+        notification.style.display = "block";
+
+        setTimeout(function() {
+
+            notification.style.display = "none";
+
+        }, 3000);
+
+    }
+
+
+    /* =================================================
+       RENDER PIZZA VARIETIES
+    ================================================= */
+
+    function renderPizzaVarieties() {
+
+        const grid =
+            document.getElementById("pizzaGrid");
+
+        grid.innerHTML = "";
+
+        pizzaVarieties.forEach(function(pizza) {
+
+            const card =
+                document.createElement("div");
+
+            card.className = "pizza-card";
+
+            card.innerHTML = `
+
+                <div
+                    class="pizza-image"
+                    style="
+                        background-image:
+                        url('${pizza.image}')
+                    ">
+                </div>
+
+                <div class="pizza-info">
+
+                    <h3>
+                        ${pizza.name}
+                    </h3>
+
+                    <p>
+                        Delicious freshly prepared pizza.
+                    </p>
+
+                    <div class="price">
+                        ₹${pizza.price}
+                    </div>
+
+                    <button
+                        class="primary-btn"
+                        data-pizza="${pizza.name}">
+
+                        Order Now
+
+                    </button>
+
+                </div>
+            `;
+
+            grid.appendChild(card);
+
+        });
+
+
+        document
+            .querySelectorAll("[data-pizza]")
+            .forEach(function(button) {
+
+                button.addEventListener(
+                    "click",
+                    function() {
+
+                        document
+                            .getElementById(
+                                "builderSection"
+                            )
+                            .scrollIntoView({
+                                behavior: "smooth"
+                            });
+
+                    }
+                );
+
+            });
+
+    }
+
+
+    /* =================================================
+       RENDER OPTIONS
+    ================================================= */
+
+    function renderOptions() {
+
+        renderSingleOptions(
+            bases,
+            "baseOptions",
+            "base"
+        );
+
+        renderSingleOptions(
+            sauces,
+            "sauceOptions",
+            "sauce"
+        );
+
+        renderSingleOptions(
+            cheeses,
+            "cheeseOptions",
+            "cheese"
+        );
+
+        renderVegetables();
+
+    }
+
+
+    function renderSingleOptions(
+        items,
+        containerId,
+        type
+    ) {
+
+        const container =
+            document.getElementById(containerId);
+
+        container.innerHTML = "";
+
+        items.forEach(function(item) {
+
+            const button =
+                document.createElement("button");
+
+            button.className = "option";
+
+            button.innerHTML = `
+
+                <strong>
+                    ${item.name}
+                </strong>
+
+                <br>
+
+                ₹${item.price}
+
+            `;
+
+            button.addEventListener(
+                "click",
+                function() {
+
+                    if (type === "base") {
+
+                        selectedBase = item;
+
+                    }
+
+                    if (type === "sauce") {
+
+                        selectedSauce = item;
+
+                    }
+
+                    if (type === "cheese") {
+
+                        selectedCheese = item;
+
+                    }
+
+                    container
+                        .querySelectorAll(".option")
+                        .forEach(function(btn) {
+
+                            btn.classList.remove(
+                                "selected"
+                            );
+
+                        });
+
+                    button.classList.add("selected");
+
+                    updateSummary();
+
+                }
+            );
+
+            container.appendChild(button);
+
+        });
+
+    }
+
+
+    /* =================================================
+       VEGETABLES
+    ================================================= */
+
+    function renderVegetables() {
+
+        const container =
+            document.getElementById(
+                "vegetableOptions"
+            );
+
+        container.innerHTML = "";
+
+        vegetables.forEach(function(vegetable) {
+
+            const label =
+                document.createElement("label");
+
+            label.className =
+                "option vegetable-option";
+
+            label.innerHTML = `
+
+                <input
+                    type="checkbox"
+                    value="${vegetable.name}">
+
+                <span>
+                    ${vegetable.name}
+                    (+₹${vegetable.price})
+                </span>
+
+            `;
+
+            const checkbox =
+                label.querySelector("input");
+
+            checkbox.addEventListener(
+                "change",
+                function() {
+
+                    if (checkbox.checked) {
+
+                        selectedVegetables.push(
+                            vegetable
+                        );
+
+                        label.classList.add(
+                            "selected"
+                        );
+
+                    } else {
+
+                        selectedVegetables =
+                            selectedVegetables.filter(
+                                function(item) {
+
+                                    return item.name !==
+                                        vegetable.name;
+
+                                }
+                            );
+
+                        label.classList.remove(
+                            "selected"
+                        );
+
+                    }
+
+                    updateSummary();
+
+                }
+            );
+
+            container.appendChild(label);
+
+        });
+
+    }
+
+
+    /* =================================================
+       CALCULATE TOTAL
+    ================================================= */
+
+    function calculateTotal() {
+
+        let total = 0;
+
+
+        if (selectedBase) {
+
+            total += selectedBase.price;
+
+        }
+
+
+        if (selectedSauce) {
+
+            total += selectedSauce.price;
+
+        }
+
+
+        if (selectedCheese) {
+
+            total += selectedCheese.price;
+
+        }
+
+
+        selectedVegetables.forEach(
+            function(vegetable) {
+
+                total += vegetable.price;
+
+            }
+        );
+
+
+        return total;
+
+    }
+
+
+    /* =================================================
+       UPDATE SUMMARY
+    ================================================= */
+
+    function updateSummary() {
+
+        const summary =
+            document.getElementById(
+                "summaryContent"
+            );
+
+        let html = "";
+
+
+        if (selectedBase) {
+
+            html += `
+
+                <div class="summary-row">
+
+                    <span>Base</span>
+
+                    <span>
+                        ${selectedBase.name}
+                    </span>
+
+                </div>
+
+            `;
+
+        }
+
+
+        if (selectedSauce) {
+
+            html += `
+
+                <div class="summary-row">
+
+                    <span>Sauce</span>
+
+                    <span>
+                        ${selectedSauce.name}
+                    </span>
+
+                </div>
+
+            `;
+
+        }
+
+
+        if (selectedCheese) {
+
+            html += `
+
+                <div class="summary-row">
+
+                    <span>Cheese</span>
+
+                    <span>
+                        ${selectedCheese.name}
+                    </span>
+
+                </div>
+
+            `;
+
+        }
+
+
+        if (selectedVegetables.length > 0) {
+
+            html += `
+
+                <div class="summary-row">
+
+                    <span>Vegetables</span>
+
+                    <span>
+                        ${
+                            selectedVegetables
+                                .map(function(v) {
+                                    return v.name;
+                                })
+                                .join(", ")
+                        }
+                    </span>
+
+                </div>
+
+            `;
+
+        }
+
+
+        if (html === "") {
+
+            html = `
+                <p>
+                    Select your pizza ingredients.
+                </p>
+            `;
+
+        }
+
+
+        summary.innerHTML = html;
+
+
+        document.getElementById(
+            "total"
+        ).textContent =
+            "Total: ₹" + calculateTotal();
+
+    }
+
+
+    /* =================================================
+       AUTH MODAL
+    ================================================= */
+
+    function openAuth(mode) {
+
+        authMode = mode;
+
+        document
+            .getElementById("authModal")
+            .classList.add("active");
+
+
+        document
+            .getElementById("authTitle")
+            .textContent =
+                mode === "login"
+                ? "Login"
+                : "Create Account";
+
+
+        document
+            .getElementById("authSubmit")
+            .textContent =
+                mode === "login"
+                ? "Login"
+                : "Register";
+
+
+        document
+            .getElementById("nameInput")
+            .style.display =
+                mode === "register"
+                ? "block"
+                : "none";
+
+    }
+
+
+    document
+        .getElementById("loginBtn")
+        .addEventListener(
+            "click",
+            function() {
+
+                openAuth("login");
+
+            }
+        );
+
+
+    document
+        .getElementById("registerBtn")
+        .addEventListener(
+            "click",
+            function() {
+
+                openAuth("register");
+
+            }
+        );
+
+
+    document
+        .getElementById("closeModal")
+        .addEventListener(
+            "click",
+            function() {
+
+                document
+                    .getElementById("authModal")
+                    .classList.remove(
+                        "active"
+                    );
+
+            }
+        );
+
+
+    /* =================================================
+       AUTH SUBMIT
+    ================================================= */
+
+    document
+        .getElementById("authSubmit")
+        .addEventListener(
+            "click",
+            function() {
+
+                const email =
+                    document
+                        .getElementById(
+                            "emailInput"
+                        )
+                        .value
+                        .trim();
+
+                const password =
+                    document
+                        .getElementById(
+                            "passwordInput"
+                        )
+                        .value;
+
+                const name =
+                    document
+                        .getElementById(
+                            "nameInput"
+                        )
+                        .value
+                        .trim();
+
+
+                if (!email || !password) {
+
+                    showNotification(
+                        "Please fill all required fields."
+                    );
+
+                    return;
+
+                }
+
+
+                let users =
+                    JSON.parse(
+                        localStorage.getItem(
+                            "pizzaUsers"
+                        )
+                    );
+
+
+                /* REGISTER */
+
+                if (authMode === "register") {
+
+                    if (!name) {
+
+                        showNotification(
+                            "Please enter your name."
+                        );
+
+                        return;
+
+                    }
+
+
+                    const existingUser =
+                        users.find(
+                            function(user) {
+
+                                return user.email ===
+                                    email;
+
+                            }
+                        );
+
+
+                    if (existingUser) {
+
+                        showNotification(
+                            "Email already registered."
+                        );
+
+                        return;
+
+                    }
+
+
+                    users.push({
+
+                        name: name,
+
+                        email: email,
+
+                        password: password,
+
+                        verified: true
+
+                    });
+
+
+                    localStorage.setItem(
+                        "pizzaUsers",
+                        JSON.stringify(users)
+                    );
+
+
+                    showNotification(
+                        "Registration successful! Email verified."
+                    );
+
+
+                    document
+                        .getElementById(
+                            "authModal"
+                        )
+                        .classList.remove(
+                            "active"
+                        );
+
+                    return;
+
+                }
+
+
+                /* LOGIN */
+
+                const user =
+                    users.find(
+                        function(user) {
+
+                            return user.email === email &&
+                                user.password === password;
+
+                        }
+                    );
+
+
+                if (!user) {
+
+                    showNotification(
+                        "Invalid email or password."
+                    );
+
+                    return;
+
+                }
+
+
+                currentUser = user;
+
+
+                localStorage.setItem(
+                    "currentPizzaUser",
+                    JSON.stringify(user)
+                );
+
+
+                document
+                    .getElementById(
+                        "authModal"
+                    )
+                    .classList.remove(
+                        "active"
+                    );
+
+
+                updateNavbar();
+
+
+                showNotification(
+                    "Login successful!"
+                );
+
+            }
+        );
+
+
+    /* =================================================
+       LOGOUT
+    ================================================= */
+
+    document
+        .getElementById("logoutBtn")
+        .addEventListener(
+            "click",
+            function() {
+
+                currentUser = null;
+
+                localStorage.removeItem(
+                    "currentPizzaUser"
+                );
+
+                updateNavbar();
+
+                showNotification(
+                    "Logged out successfully."
+                );
+
+            }
+        );
+
+
+    function updateNavbar() {
+
+        document
+            .getElementById("loginBtn")
+            .style.display =
+                currentUser ? "none" : "block";
+
+
+        document
+            .getElementById("registerBtn")
+            .style.display =
+                currentUser ? "none" : "block";
+
+
+        document
+            .getElementById("logoutBtn")
+            .style.display =
+                currentUser ? "block" : "none";
+
+    }
+
+
+    /* =================================================
+       FORGOT PASSWORD
+    ================================================= */
+
+    document
+        .getElementById("forgotBtn")
+        .addEventListener(
+            "click",
+            function() {
+
+                const email =
+                    prompt(
+                        "Enter your registered email:"
+                    );
+
+
+                if (!email) {
+
+                    return;
+
+                }
+
+
+                const users =
+                    JSON.parse(
+                        localStorage.getItem(
+                            "pizzaUsers"
+                        )
+                    );
+
+
+                const user =
+                    users.find(
+                        function(u) {
+
+                            return u.email === email;
+
+                        }
+                    );
+
+
+                if (!user) {
+
+                    showNotification(
+                        "Email not found."
+                    );
+
+                    return;
+
+                }
+
+
+                showNotification(
+                    "Password reset link sent to your email (demo)."
+                );
+
+            }
+        );
+
+
+    /* =================================================
+       PAYMENT
+    ================================================= */
+
+    document
+        .getElementById("orderBtn")
+        .addEventListener(
+            "click",
+            function() {
+
+                if (!currentUser) {
+
+                    showNotification(
+                        "Please login before ordering."
+                    );
+
+                    openAuth("login");
+
+                    return;
+
+                }
+
+
+                if (
+                    !selectedBase ||
+                    !selectedSauce ||
+                    !selectedCheese
+                ) {
+
+                    showNotification(
+                        "Please complete all pizza builder steps."
+                    );
+
+                    return;
+
+                }
+
+
+                const total =
+                    calculateTotal();
+
+
+                document
+                    .getElementById(
+                        "paymentAmount"
+                    )
+                    .textContent =
+                        "Amount: ₹" + total;
+
+
+                document
+                    .getElementById(
+                        "paymentModal"
+                    )
+                    .classList.add(
+                        "active"
+                    );
+
+            }
+        );
+
+
+    document
+        .getElementById("paymentCancel")
+        .addEventListener(
+            "click",
+            function() {
+
+                document
+                    .getElementById(
+                        "paymentModal"
+                    )
+                    .classList.remove(
+                        "active"
+                    );
+
+            }
+        );
+
+
+    /* =================================================
+       PAYMENT SUCCESS
+    ================================================= */
+
+    document
+        .getElementById("paymentSuccess")
+        .addEventListener(
+            "click",
+            function() {
+
+                const order = {
+
+                    id:
+                        "PIZZA-" +
+                        Date.now(),
+
+                    customer:
+                        currentUser.email,
+
+                    pizza: {
+
+                        base: selectedBase,
+
+                        sauce: selectedSauce,
+
+                        cheese: selectedCheese,
+
+                        vegetables:
+                            selectedVegetables
+
+                    },
+
+                    amount:
+                        calculateTotal(),
+
+                    status: 1,
+
+                    date:
+                        new Date()
+                            .toLocaleString()
+
+                };
+
+
+                let orders =
+                    JSON.parse(
+                        localStorage.getItem(
+                            "pizzaOrders"
+                        )
+                    );
+
+
+                orders.push(order);
+
+
+                localStorage.setItem(
+                    "pizzaOrders",
+                    JSON.stringify(orders)
+                );
+
+
+                currentOrder = order;
+
+
+                document
+                    .getElementById(
+                        "paymentModal"
+                    )
+                    .classList.remove(
+                        "active"
+                    );
+
+
+                showNotification(
+                    "Payment successful! Order confirmed."
+                );
+
+
+                showTracking(order);
+
+
+                simulateOrderProgress();
+
+            }
+        );
+
+
+    /* =================================================
+       ORDER TRACKING
+    ================================================= */
+
+    function showTracking(order) {
+
+        document
+            .getElementById(
+                "trackingSection"
+            )
+            .style.display = "block";
+
+
+        document
+            .getElementById(
+                "orderId"
+            )
+            .textContent =
+                "Order ID: " + order.id;
+
+
+        document
+            .getElementById(
+                "trackingSection"
+            )
+            .scrollIntoView({
+                behavior: "smooth"
+            });
+
+    }
+
+
+    function simulateOrderProgress() {
+
+        setTimeout(
+            function() {
+
+                updateOrderStatus(2);
+
+            },
+            5000
+        );
+
+
+        setTimeout(
+            function() {
+
+                updateOrderStatus(3);
+
+            },
+            10000
+        );
+
+
+        setTimeout(
+            function() {
+
+                updateOrderStatus(4);
+
+            },
+            15000
+        );
+
+    }
+
+
+    function updateOrderStatus(status) {
+
+        currentOrder.status = status;
+
+
+        for (
+            let i = 1;
+            i <= 4;
+            i++
+        ) {
+
+            const step =
+                document.getElementById(
+                    "step" + i
+                );
+
+
+            if (i <= status) {
+
+                step.classList.add(
+                    "active"
+                );
+
+            } else {
+
+                step.classList.remove(
+                    "active"
+                );
+
+            }
+
+        }
+
+
+        if (status === 4) {
+
+            showNotification(
+                "Your pizza has been delivered! 🍕"
+            );
+
+        }
+
+    }
+
+
+    /* =================================================
+       ADMIN INVENTORY
+    ================================================= */
+
+    const inventoryData = [
+
+        {
+            name: "Classic Base",
+            stock: 25
+        },
+
+        {
+            name: "Tomato Sauce",
+            stock: 18
+        },
+
+        {
+            name: "Mozzarella",
+            stock: 12
+        },
+
+        {
+            name: "Onion",
+            stock: 20
+        },
+
+        {
+            name: "Capsicum",
+            stock: 8
+        },
+
+        {
+            name: "Mushroom",
+            stock: 5
+        }
+
+    ];
+
+
+    function renderInventory() {
+
+        const container =
+            document.getElementById(
+                "inventory"
+            );
+
+        container.innerHTML = "";
+
+
+        inventoryData.forEach(
+            function(item) {
+
+                const card =
+                    document.createElement(
+                        "div"
+                    );
+
+                card.className =
+                    "stock-card";
+
+
+                const lowStock =
+                    item.stock <= 5;
+
+
+                card.innerHTML = `
+
+                    <h3>
+                        ${item.name}
+                    </h3>
+
+                    <p>
+                        Stock:
+                        <strong>
+                            ${item.stock}
+                        </strong>
+                    </p>
+
+                    ${
+                        lowStock
+                        ?
+                        `
+                        <p class="low-stock">
+                            ⚠ Low Stock
+                        </p>
+                        `
+                        :
+                        `
+                        <p>
+                            Available
+                        </p>
+                        `
+                    }
+
+                `;
+
+
+                container.appendChild(card);
+
+
+                if (lowStock) {
+
+                    console.log(
+                        "Low stock notification:",
+                        item.name
+                    );
+
+                }
+
+            }
+        );
+
+    }
+
+
+    /* =================================================
+       START BUTTON
+    ================================================= */
+
+    document
+        .getElementById("startBtn")
+        .addEventListener(
+            "click",
+            function() {
+
+                document
+                    .getElementById(
+                        "builderSection"
+                    )
+                    .scrollIntoView({
+                        behavior: "smooth"
+                    });
+
+            }
+        );
+
+
+    /* =================================================
+       INITIALIZE
+    ================================================= */
+
+    renderPizzaVarieties();
+
+    renderOptions();
+
+    renderInventory();
+
+    updateSummary();
+
+
+    /* Restore login */
+
+    const savedUser =
+        localStorage.getItem(
+            "currentPizzaUser"
+        );
+
+
+    if (savedUser) {
+
+        currentUser =
+            JSON.parse(savedUser);
+
+        updateNavbar();
+
+    }
+
+</script>
+
+</body>
+
+</html>
+```
